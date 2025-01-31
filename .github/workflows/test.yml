@@ -71,12 +71,27 @@ jobs:
       - name: Run executable
         run: |
           set -eux
-          bin/deepl -i "proton beam" -t DE --debug
+          # --- version ---
+          bin/deepl --version
+          bin/deepl -v
+          # --- help ---
+          bin/deepl --help
+          bin/deepl -h
+          # --- translate text ---
+          bin/deepl -i "proton beam" -f EN -t DE
+          bin/deepl --input "proton beam" --from EN --to DE
+          cat spec/fixtures/proton_beams.txt | bin/deepl -f EN -t DE
+          bin/deepl -f EN -t DE < spec/fixtures/proton_beams.txt
+          bin/deepl -f EN -t DE -i "proton beam" -o translated.txt && cat translated.txt
           bin/deepl -t
           bin/deepl -f
-          bin/deepl -u
+          # --- glossary ---
           bin/deepl glossary list
-          bin/deepl doc spec/fixtures/proton_beams.txt -t DE
+          # --- translate document ---
+          bin/deepl doc spec/fixtures/proton_beams.txt -t DE && cat spec/fixtures/proton_beams_DE.txt
+          # --- usage ---
+          bin/deepl --usage
+          bin/deepl -u
 
       - name: Stop deepl-mock server
         if: always()
